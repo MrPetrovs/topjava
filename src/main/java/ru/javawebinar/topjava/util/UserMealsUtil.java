@@ -6,8 +6,7 @@ import ru.javawebinar.topjava.model.UserMealWithExcess;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class UserMealsUtil {
     public static void main(String[] args) {
@@ -28,12 +27,40 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO return filtered list with excess. Implement by cycles
-        return null;
+
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (UserMeal userMeal : meals) {
+            int dayOfMonth = userMeal.getDateTime().toLocalDate().getDayOfMonth();
+            int calories = map.getOrDefault(dayOfMonth, -1);
+
+            if (calories == -1) {
+                map.put(dayOfMonth, userMeal.getCalories());
+            }else {
+                map.replace(dayOfMonth, calories, calories + userMeal.getCalories());
+            }
+        }
+
+        List<UserMealWithExcess> resultList = new ArrayList<>();
+
+        for (UserMeal userMeal : meals) {
+            int timeToCheck = userMeal.getDateTime().toLocalTime().toSecondOfDay();
+
+            if (timeToCheck >= startTime.toSecondOfDay() && timeToCheck <= endTime.toSecondOfDay()) {
+                int dayOfMonth = userMeal.getDateTime().toLocalDate().getDayOfMonth();
+
+                if (map.get(dayOfMonth) > caloriesPerDay) {
+                    resultList.add(new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), true));
+                } else {
+                    resultList.add(new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), false));
+                }
+            }
+        }
+        return resultList;
     }
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO Implement by streams
+
         return null;
     }
 }
