@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.util;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.model.UserMealWithExcess;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
@@ -28,17 +29,11 @@ public class UserMealsUtil {
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
 
-        Map<Integer, Integer> map = new HashMap<>();
+        Map<LocalDate, Integer> map = new HashMap<>();
 
         for (UserMeal userMeal : meals) {
-            int dayOfMonth = userMeal.getDateTime().toLocalDate().getDayOfMonth();
-            int calories = map.getOrDefault(dayOfMonth, -1);
-
-            if (calories == -1) {
-                map.put(dayOfMonth, userMeal.getCalories());
-            }else {
-                map.replace(dayOfMonth, calories, calories + userMeal.getCalories());
-            }
+            LocalDate dayOfMonth = userMeal.getDateTime().toLocalDate();
+            map.put(dayOfMonth, map.getOrDefault(dayOfMonth, 0) + userMeal.getCalories());
         }
 
         List<UserMealWithExcess> resultList = new ArrayList<>();
@@ -47,13 +42,10 @@ public class UserMealsUtil {
             LocalTime timeToCheck = userMeal.getDateTime().toLocalTime();
 
             if (TimeUtil.isBetweenHalfOpen(timeToCheck, startTime, endTime)) {
-                int dayOfMonth = userMeal.getDateTime().toLocalDate().getDayOfMonth();
+                LocalDate dayOfMonth = userMeal.getDateTime().toLocalDate();
 
-                if (map.get(dayOfMonth) > caloriesPerDay) {
-                    resultList.add(new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), true));
-                } else {
-                    resultList.add(new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), false));
-                }
+                resultList.add(new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(),
+                        map.get(dayOfMonth) > caloriesPerDay));
             }
         }
         return resultList;
