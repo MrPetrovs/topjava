@@ -44,9 +44,9 @@ public class UserMealsUtil {
         List<UserMealWithExcess> resultList = new ArrayList<>();
 
         for (UserMeal userMeal : meals) {
-            int timeToCheck = userMeal.getDateTime().toLocalTime().toSecondOfDay();
+            LocalTime timeToCheck = userMeal.getDateTime().toLocalTime();
 
-            if (timeToCheck >= startTime.toSecondOfDay() && timeToCheck <= endTime.toSecondOfDay()) {
+            if (TimeUtil.isBetweenHalfOpen(timeToCheck, startTime, endTime)) {
                 int dayOfMonth = userMeal.getDateTime().toLocalDate().getDayOfMonth();
 
                 if (map.get(dayOfMonth) > caloriesPerDay) {
