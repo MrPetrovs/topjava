@@ -23,21 +23,21 @@
         <th></th>
     </tr>
     <c:forEach items="${requestScope.mealsList}" var="meals">
-        <tr>
-            <% String textColor = "green"; %>
-            <c:choose>
-                <c:when test="${meals.excess}">
-                    <% textColor = "red"; %>
-                </c:when>
-            </c:choose>
+        <% String textColor = "green"; %>
+        <c:choose>
+            <c:when test="${meals.excess}">
+                <% textColor = "red"; %>
+            </c:when>
+        </c:choose>
+        <tr style="color:<%= textColor %>">
             <h4>
-                <td style="color:<%= textColor %>"><c:out value="${meals.dateTime.toString().replace('T', ' ')}"/></td>
+                <td><c:out value="${meals.dateTime.toString().replace('T', ' ')}"/></td>
             </h4>
             <h4>
-                <td style="color:<%= textColor %>"><c:out value="${meals.description}"/></td>
+                <td><c:out value="${meals.description}"/></td>
             </h4>
             <h4>
-                <td style="color:<%= textColor %>"><c:out value="${meals.calories}"/></td>
+                <td><c:out value="${meals.calories}"/></td>
             </h4>
             <h4>
                 <td>Update</td>

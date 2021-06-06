@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
+import ru.javawebinar.topjava.dao.MealDao;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -16,11 +17,17 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
 
+    private MealDao mealDao = new MealDao();
+
+//    public MealServlet(MealDao mealDao) {
+//        this.mealDao = mealDao;
+//    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to users");
 
-        List<MealTo> mealsList = MealsUtil.filteredByStreamsWithoutTimeLimits(MealsUtil.meals);
+        List<MealTo> mealsList = MealsUtil.filteredByStreamsWithoutTimeLimits(mealDao.index());
         request.setAttribute("mealsList", mealsList);
         request.getRequestDispatcher("/meals.jsp").forward(request, response);
         //response.sendRedirect("meals.jsp");
