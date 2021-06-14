@@ -30,12 +30,15 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
+        System.out.println(id);
 
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
 
+        System.out.println(meal.getId());
+        System.out.println(meal.isNew());
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         repository.save(SecurityUtil.authUserId(), meal);
         response.sendRedirect("meals");

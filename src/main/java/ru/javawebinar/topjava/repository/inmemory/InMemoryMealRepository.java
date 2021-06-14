@@ -16,16 +16,14 @@ public class InMemoryMealRepository implements MealRepository {
 
     {
         ConcurrentHashMap<Integer, Meal> map1 = new ConcurrentHashMap<>();
-        int count = 0;
         for (int i = 0; i < MealsUtil.mealsForUser1.size(); i++) {
-            MealsUtil.mealsForUser1.get(i).setId(count++);
+            MealsUtil.mealsForUser1.get(i).setId(counter.incrementAndGet());
             map1.put(MealsUtil.mealsForUser1.get(i).getId(), MealsUtil.mealsForUser1.get(i));
         }
 
         ConcurrentHashMap<Integer, Meal> map2 = new ConcurrentHashMap<>();
-        count = 0;
         for (int i = 0; i < MealsUtil.mealsForUser2.size(); i++) {
-            MealsUtil.mealsForUser2.get(i).setId(count++);
+            MealsUtil.mealsForUser2.get(i).setId(counter.incrementAndGet());
             map2.put(MealsUtil.mealsForUser2.get(i).getId(), MealsUtil.mealsForUser2.get(i));
         }
 
@@ -37,6 +35,7 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public Meal save(int userId, Meal meal) {
         if (meal.isNew()) {
+            System.out.println("meal id = " + meal.getId());
             meal.setId(counter.incrementAndGet());
             if (repository.containsKey(userId)) {
                 repository.get(userId).put(meal.getId(), meal);
