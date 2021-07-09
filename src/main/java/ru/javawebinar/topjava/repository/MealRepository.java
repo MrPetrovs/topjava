@@ -1,5 +1,4 @@
 package ru.javawebinar.topjava.repository;
-
 import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDateTime;
@@ -20,4 +19,5 @@ public interface MealRepository {
 
     // ORDERED dateTime desc
     List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId);
+
 }
