@@ -39,3 +39,26 @@ $(function () {
         })
     );
 });
+
+$.urlParam = function(name){
+    let results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null) {
+        return null;
+    }
+    return decodeURI(results[1]) || 0;
+}
+
+function filter() {
+    $.ajax({
+        url: ctx.ajaxUrl + "/filter",
+        type: "get", //send it through get method
+        data: {
+            startDate: $.urlParam("startDate"),
+            startTime: $.urlParam("startTime"),
+            endDate: $.urlParam("endDate"),
+            endTime: $.urlParam("endTime")
+        }
+    }).done(function () {
+        updateTable();
+    });
+}
