@@ -45,17 +45,11 @@ public class MealUIController extends AbstractMealController {
         if (result.hasErrors()) {
             return showErrors(result);
         }
-        super.create(meal);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> update(@Valid Meal meal, int id, BindingResult result) {
-        if (result.hasErrors()) {
-            return showErrors(result);
+        if (meal.isNew()) {
+            super.create(meal);
+        } else {
+            super.update(meal, meal.getId());
         }
-        super.update(meal, id);
         return ResponseEntity.ok().build();
     }
 
